@@ -45,9 +45,11 @@ async fn main() {
         }
 
         if let Some((px, py)) = anchor {
+            let thickness = 6.;
             draw_circle(px, py, circle_size, GREEN);
             let size = 200.;
-            draw_rectangle_lines(px - size, py - size, size * 2., size * 2., 6., RED);
+            draw_rectangle_lines(px - size, py - size, size * 2., size * 2., thickness, RED);
+            draw_circle_lines(px, py, size - thickness, thickness, PINK);
             draw_line(mx, my, px, py, 2., YELLOW);
             let mouse = Vec2::new(mx, my);
             let anchor = Vec2::new(px, py);
