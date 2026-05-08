@@ -45,7 +45,6 @@ async fn main() {
         }
 
         if let Some((px, py)) = anchor {
-
             draw_circle(px, py, circle_size, GREEN);
             let size = 200.;
             draw_rectangle_lines(px - size, py - size, size * 2., size * 2., 6., RED);
@@ -54,7 +53,13 @@ async fn main() {
             let anchor = Vec2::new(px, py);
             let distance = mouse.distance(anchor);
             let font_size = 20.;
-            draw_text(&distance.to_string(), mx - font_size / 2., my + 20., font_size, GREEN);
+            draw_text(
+                &format!("{:.2}", distance),
+                mx - font_size / 2.,
+                my + 20.,
+                font_size,
+                GREEN,
+            );
         }
 
         //     let height = screen_height();
