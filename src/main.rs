@@ -10,6 +10,8 @@ const SIZE: f32 = 200.;
 const FONT_SIZE: f32 = 20.;
 const FONT_PADDING: f32 = 20.;
 const CIRCLE_SIZE: f32 = 6.;
+const COLUMNS: u16 = 20;
+const ROWS: u16 = 20;
 
 struct Square {
     size: f32,
@@ -25,20 +27,21 @@ async fn main() {
     show_mouse(false);
     set_fullscreen(true);
 
-    let mut zoom = 1.;
+    let mut scale = 1.;
     let mut anchor = None;
     loop {
+        clear_background(GRAY);
+        draw_lines(scale);
         let (_, scroll) = mouse_wheel();
         if (scroll != 0.) {
-            zoom += (scroll * 0.1);
-            zoom = zoom.clamp(0.1, 20.);
+            scale += (scroll * 0.1);
+            scale = scale.clamp(0.1, 20.);
         }
-        let font_size = FONT_SIZE * zoom;
-        let font_padding = FONT_PADDING * zoom;
-        let thickness = THICKNESS * zoom;
-        let size = SIZE * zoom;
-        let circle_size = CIRCLE_SIZE * zoom;
-        clear_background(GRAY);
+        let font_size = FONT_SIZE * scale;
+        let font_padding = FONT_PADDING * scale;
+        let thickness = THICKNESS * scale;
+        let size = SIZE * scale;
+        let circle_size = CIRCLE_SIZE * scale;
         let (mx, my) = mouse_position();
         draw_circle(mx, my, circle_size, BLUE);
         if is_mouse_button_pressed(MouseButton::Left) {
@@ -63,6 +66,26 @@ async fn main() {
                 GREEN,
             );
         }
+
         next_frame().await
+    }
+}
+
+fn draw_lines(scale: f32) {
+    let width = screen_width();
+    let height = screen_height();
+    let stride = 80. * scale;
+    assert_ne!(stride, 0.);
+    let columns = (width / stride) as u32 + 1;
+    let rows = (height / stride) as u32 + 1;
+
+    for i in 0..=columns {
+        let x = i as f32 * stride as f32;
+        draw_line(x, 0., x, height, 2., BLACK);
+    }
+
+    for i in 0..=rows {
+        let y = i as f32 * stride as f32;
+        draw_line(0., y, width, y, 2., BLACK);
     }
 }
